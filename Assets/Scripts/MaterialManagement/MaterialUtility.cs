@@ -53,9 +53,9 @@ namespace UO.MaterialManagement
         ///<summary>
         ///Set color by using Color struct.
         ///</summary>
-        public static void ChangeColor(this Material material, Color color)
+        public static void ChangeColor(this Material material, Color targetColor)
         {
-            material.color = color;
+            material.SetColor("_BaseColor", targetColor);
         }
 
         ///<summary>
@@ -66,6 +66,31 @@ namespace UO.MaterialManagement
             Color32 color = new Color32(((byte)r), ((byte)g), ((byte)b) , ((byte)a));
 
             material.color = color;
+        }
+
+        ///<summary>
+        ///Set color gradually.
+        ///</summary>
+        public static void ChangeColor(this Material material, Color targetColor, float duration = 0f)
+        {
+            material.DOColor(targetColor, duration);
+        }
+
+        ///<summary>
+        ///Set color by only changing Hue. So that saturation and value(brightness) remains same.
+        ///</summary>
+        public static void ChangeColorHue(this Material material, Color targetColor)
+        {
+            float targetH, targetS, targetV;
+            Color.RGBToHSV(targetColor, out targetH, out targetS, out targetV);
+
+            Color color = material.color;
+            float H, S, V;
+            Color.RGBToHSV(color, out H, out S, out V);
+
+            H = targetH;
+            color = Color.HSVToRGB(H, S, V);
+            material.SetColor("_BaseColor", color);
         }
     }
 }
