@@ -7,8 +7,8 @@ using UnityEngine.EventSystems;
 
 public class Test : MonoBehaviour
 {
-    private void Start() 
+    private void Update() 
     {
-        Debug.Log(InputManager.instance.isFingerDown);
+        // Debug.Log(InputManager.instance.position);
     }
 }
