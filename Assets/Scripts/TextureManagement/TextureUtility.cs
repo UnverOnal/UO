@@ -24,6 +24,23 @@ namespace UO.TextureManagement
         }
 
         ///<summary>
+        ///Create color by only changing Saturation. So that hue and value(brightness) remains same.
+        ///</summary>
+        private static Color ChangePixelColorSaturation(Color currentColor, Color targetColor)
+        {
+            float targetH, targetS, targetV;
+            Color.RGBToHSV(targetColor, out targetH, out targetS, out targetV);
+
+            float currentH, currentS, currentV;
+            Color.RGBToHSV(currentColor, out currentH, out currentS, out currentV);
+
+            currentS = targetS;
+            currentColor = Color.HSVToRGB(currentH, currentS, currentV);
+
+            return currentColor;
+        }
+
+        ///<summary>
         ///Get coordinates of pixels to be painted.
         ///</summary>
         public static List<Vector2> GetPixelsToBePainted(Texture texture)

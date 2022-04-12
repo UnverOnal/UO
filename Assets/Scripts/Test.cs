@@ -9,6 +9,6 @@ public class Test : MonoBehaviour
 {
     private void Update() 
     {
-        // Debug.Log(InputManager.instance.position);
+        Debug.Log(UHInput.DeltaPosition);
     }
 }
