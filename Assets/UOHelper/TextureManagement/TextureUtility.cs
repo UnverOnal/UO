@@ -8,7 +8,7 @@ namespace UO.TextureManagement
     public static class TextureUtility
     {
         ///<summary>
-        ///Create color by only changing Hue. So that saturation and value(brightness) remains same.
+        ///Create color by only changing Hue. So that saturation and value(brightness) remain same.
         ///</summary>
         public static Color ChangePixelColorHue(Color currentColor, Color targetColor)
         {
@@ -25,7 +25,7 @@ namespace UO.TextureManagement
         }
 
         ///<summary>
-        ///Create color by only changing Saturation. So that hue and value(brightness) remains same.
+        ///Create color by only changing Saturation. So that hue and value(brightness) remain same.
         ///</summary>
         public static Color ChangePixelColorSaturation(Color currentColor, Color targetColor)
         {
@@ -42,7 +42,24 @@ namespace UO.TextureManagement
         }
 
         ///<summary>
-        ///Get coordinates of pixels to be painted.
+        ///Create color by only changing Value. So that hue and saturaion remain same.
+        ///</summary>
+        public static Color ChangePixelColorValue(Color currentColor, Color targetColor)
+        {
+            float targetH, targetS, targetV;
+            Color.RGBToHSV(targetColor, out targetH, out targetS, out targetV);
+
+            float currentH, currentS, currentV;
+            Color.RGBToHSV(currentColor, out currentH, out currentS, out currentV);
+
+            currentV = targetV;
+            currentColor = Color.HSVToRGB(currentH, currentS, currentV);
+
+            return currentColor;
+        }
+
+        ///<summary>
+        ///Get coordinates of pixels to be painted whose alpha value is zero.
         ///</summary>
         public static List<Vector2> GetPixelsToBePainted(Texture texture)
         {

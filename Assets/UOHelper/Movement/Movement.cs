@@ -95,8 +95,22 @@ namespace UO.MovementManagement
             endAction.Invoke();
         }
 
+        public IEnumerator MoveToTarget(Vector3 targetPosition, float smoothness, float endDistance)
+        {
+            Vector3 currentPosition = transformToMove.position;
+
+            while(Vector3.Distance(transformToMove.position, targetPosition) > endDistance)
+            {
+                currentPosition = transformToMove.position;
+                transformToMove.position = Vector3.Lerp(currentPosition, targetPosition, Time.deltaTime * smoothness);
+
+                yield return null;
+            }
+            transformToMove.position = targetPosition;
+        }
+
         #region Rotation
-            public IEnumerator Rotate(float duration, Vector3 targetAngles)
+            public IEnumerator RotateTo(float duration, Vector3 targetAngles)
             {
                 Quaternion currentRotation = transformToMove.rotation;
                 Quaternion targetRotation = Quaternion.Euler(targetAngles);
@@ -114,7 +128,7 @@ namespace UO.MovementManagement
                 transformToMove.rotation = targetRotation;
             }
 
-            public IEnumerator Rotate(float duration, Vector3 targetAngles, Action endAction)
+            public IEnumerator RotateTo(float duration, Vector3 targetAngles, Action endAction)
             {
                 Quaternion currentRotation = transformToMove.rotation;
                 Quaternion targetRotation = Quaternion.Euler(targetAngles);
@@ -132,6 +146,20 @@ namespace UO.MovementManagement
                 transformToMove.rotation = targetRotation;
 
                 endAction.Invoke();
+            }
+
+            public IEnumerator Rotate(float duration, Vector3 axis, float speed)
+            {
+                float elapsedTime = 0f;
+
+                while(elapsedTime < duration)
+                {
+                    transformToMove.Rotate(axis * Time.deltaTime * speed);
+
+                    elapsedTime += Time.deltaTime;
+
+                    yield return null;
+                }
             }
 
             public void Rotate(Vector3 axis, float rotateSpeed)
@@ -139,7 +167,7 @@ namespace UO.MovementManagement
                 transformToMove.Rotate(axis * Time.deltaTime * rotateSpeed);
             }
         
-            public IEnumerator RotateLocal(float duration, Vector3 targetAngles)
+            public IEnumerator RotateToLocal(float duration, Vector3 targetAngles)
             {
                 Quaternion currentRotation = transformToMove.localRotation;
                 Quaternion targetRotation = Quaternion.Euler(targetAngles);
@@ -157,7 +185,7 @@ namespace UO.MovementManagement
                 transformToMove.localRotation = targetRotation;
             }
 
-            public IEnumerator RotateLocal(float duration, Vector3 targetAngles, Action endAction)
+            public IEnumerator RotateToLocal(float duration, Vector3 targetAngles, Action endAction)
             {
                 Quaternion currentRotation = transformToMove.localRotation;
                 Quaternion targetRotation = Quaternion.Euler(targetAngles);
@@ -175,6 +203,20 @@ namespace UO.MovementManagement
                 transformToMove.localRotation = targetRotation;
 
                 endAction.Invoke();
+            }
+
+            public IEnumerator RotateLocal(float duration, Vector3 axis, float speed)
+            {
+                float elapsedTime = 0f;
+
+                while(elapsedTime < duration)
+                {
+                    transformToMove.Rotate(axis * Time.deltaTime * speed, Space.Self);
+
+                    elapsedTime += Time.deltaTime;
+
+                    yield return null;
+                }
             }
 
             public void RotateLocal(Vector3 axis, float rotateSpeed)

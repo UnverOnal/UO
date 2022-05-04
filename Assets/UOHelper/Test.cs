@@ -9,6 +9,6 @@ public class Test : MonoBehaviour
 {
     private void Update() 
     {
-        Debug.Log(UHInput.DeltaPosition);
+        Debug.Log(UOInput.GetSwipe(10f));
     }
 }

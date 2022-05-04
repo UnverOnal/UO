@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UO.Singleton;
 
-public static class UHInput
+public static class UOInput
 {
     public static bool IsPointerDown { get; set; }
     public static bool IsPointerUp { get; set; }
@@ -14,7 +15,16 @@ public static class UHInput
     public static Vector3 PointerPosition => UnityEngine.Input.mousePosition;
     public static Vector3 PointerDownPosition { get; set; }
 
-    private static Vector2 GetDragInput(float sensitivity)
+    public static bool CanSwipe { get; set; }
+
+
+    [RuntimeInitializeOnLoadMethod]
+    private static void InitializeCalculation()
+    {
+        InputCalculator.instance = Singleton.GetInstance<InputCalculator>();
+    }
+
+    public static Vector2 GetDragInput(float sensitivity)
     {
         Vector2 dragInput = new Vector2();
         dragInput.x = GetDragOnSingleAxis(Vector3.right, sensitivity);
@@ -25,7 +35,21 @@ public static class UHInput
 
     private static float GetDragOnSingleAxis(Vector3 axis, float sensitivity)
     {
-        float input = Vector3.Dot(axis, UHInput.DeltaPosition) * sensitivity / Screen.width;
+        float input = Vector3.Dot(axis, UOInput.DeltaPosition) * sensitivity / Screen.width;
         return input;
+    }
+
+    public static int GetSwipe(float sensitivity, bool requireRelease = true)
+    {
+        if (requireRelease && !CanSwipe)
+            return 0;
+
+        float input = Vector3.Dot(Vector3.right, PointerPosition - PointerDownPosition) * sensitivity / Screen.width;
+
+        var swipeInput = (int)Mathf.Clamp(input, -1.1f, 1.1f);
+        if (swipeInput != 0)
+            CanSwipe = false;
+        
+        return swipeInput;
     }
 }
