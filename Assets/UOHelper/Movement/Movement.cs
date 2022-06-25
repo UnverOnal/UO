@@ -14,101 +14,103 @@ namespace UO.MovementManagement
             this.transformToMove = transformToMove;
         }
 
-        public void MoveTo(Vector3 targetPosition, float smoothness)
-        {
-            Vector3 currentPosition = transformToMove.position;
-
-            Vector3 smoothedPosition = Vector3.Lerp(currentPosition, targetPosition, Time.deltaTime * smoothness);
-            transformToMove.position = smoothedPosition;
-        }
-
-        // Moves the transform targets place as the target moves
-        public IEnumerator MoveToTarget(Vector3 targetPosition, float duration)
-        {
-            Vector3 currentPosition = transformToMove.position;
-
-            float elapsedTime = 0f;
-
-            while(elapsedTime < duration)
+        #region Position
+            public void MoveTo(Vector3 targetPosition, float smoothness)
             {
-                transformToMove.position = Vector3.Lerp(currentPosition, targetPosition, elapsedTime/duration);
+                Vector3 currentPosition = transformToMove.position;
 
-                elapsedTime += Time.deltaTime;
-
-                yield return null;
+                Vector3 smoothedPosition = Vector3.Lerp(currentPosition, targetPosition, Time.deltaTime * smoothness);
+                transformToMove.position = smoothedPosition;
             }
-            transformToMove.position = targetPosition;
-        }
-
-        public IEnumerator MoveToTarget(Vector3 targetPosition, float duration, Action endAction)
-        {
-            Vector3 currentPosition = transformToMove.position;
-
-            float elapsedTime = 0f;
-
-            while(elapsedTime < duration)
+            
+            public IEnumerator MoveToTarget(Vector3 targetPosition, float duration)
             {
-                transformToMove.position = Vector3.Lerp(currentPosition, targetPosition, elapsedTime/duration);
+                Vector3 currentPosition = transformToMove.position;
 
-                elapsedTime += Time.deltaTime;
+                float elapsedTime = 0f;
 
-                yield return null;
+                while(elapsedTime < duration)
+                {
+                    transformToMove.position = Vector3.Lerp(currentPosition, targetPosition, elapsedTime/duration);
+
+                    elapsedTime += Time.deltaTime;
+
+                    yield return null;
+                }
+                transformToMove.position = targetPosition;
             }
-            transformToMove.position = targetPosition;
 
-            endAction.Invoke();
-        }
-
-        public IEnumerator MoveToTarget(Transform targetTransform, float duration)
-        {
-            Vector3 currentPosition = transformToMove.position;
-
-            float elapsedTime = 0f;
-
-            while(elapsedTime < duration)
+            public IEnumerator MoveToTarget(Vector3 targetPosition, float duration, Action endAction)
             {
-                transformToMove.position = Vector3.Lerp(currentPosition, targetTransform.position, elapsedTime/duration);
+                Vector3 currentPosition = transformToMove.position;
 
-                elapsedTime += Time.deltaTime;
+                float elapsedTime = 0f;
 
-                yield return null;
+                while(elapsedTime < duration)
+                {
+                    transformToMove.position = Vector3.Lerp(currentPosition, targetPosition, elapsedTime/duration);
+
+                    elapsedTime += Time.deltaTime;
+
+                    yield return null;
+                }
+                transformToMove.position = targetPosition;
+
+                endAction.Invoke();
             }
-            transformToMove.position = targetTransform.position;
-        }
 
-        public IEnumerator MoveToTarget(Transform targetTransform, float duration, Action endAction)
-        {
-            Vector3 currentPosition = transformToMove.position;
-
-            float elapsedTime = 0f;
-
-            while(elapsedTime < duration)
+            public IEnumerator MoveToTarget(Transform targetTransform, float duration)
             {
-                transformToMove.position = Vector3.Lerp(currentPosition, targetTransform.position, elapsedTime/duration);
+                Vector3 currentPosition = transformToMove.position;
 
-                elapsedTime += Time.deltaTime;
+                float elapsedTime = 0f;
 
-                yield return null;
+                while(elapsedTime < duration)
+                {
+                    transformToMove.position = Vector3.Lerp(currentPosition, targetTransform.position, elapsedTime/duration);
+
+                    elapsedTime += Time.deltaTime;
+
+                    yield return null;
+                }
+                transformToMove.position = targetTransform.position;
             }
-            transformToMove.position = targetTransform.position;
 
-            endAction.Invoke();
-        }
-
-        public IEnumerator MoveToTarget(Vector3 targetPosition, float smoothness, float endDistance)
-        {
-            Vector3 currentPosition = transformToMove.position;
-
-            while(Vector3.Distance(transformToMove.position, targetPosition) > endDistance)
+            public IEnumerator MoveToTarget(Transform targetTransform, float duration, Action endAction)
             {
-                currentPosition = transformToMove.position;
-                transformToMove.position = Vector3.Lerp(currentPosition, targetPosition, Time.deltaTime * smoothness);
+                Vector3 currentPosition = transformToMove.position;
 
-                yield return null;
+                float elapsedTime = 0f;
+
+                while(elapsedTime < duration)
+                {
+                    transformToMove.position = Vector3.Lerp(currentPosition, targetTransform.position, elapsedTime/duration);
+
+                    elapsedTime += Time.deltaTime;
+
+                    yield return null;
+                }
+                transformToMove.position = targetTransform.position;
+
+                endAction.Invoke();
             }
-            transformToMove.position = targetPosition;
-        }
+            
+            /// <param name="endDistance">Stopping distance.</param>
+            public IEnumerator MoveToTarget(Vector3 targetPosition, float smoothness, float endDistance)
+            {
+                Vector3 currentPosition = transformToMove.position;
 
+                while(Vector3.Distance(transformToMove.position, targetPosition) > endDistance)
+                {
+                    currentPosition = transformToMove.position;
+                    transformToMove.position = Vector3.Lerp(currentPosition, targetPosition, Time.deltaTime * smoothness);
+
+                    yield return null;
+                }
+                transformToMove.position = targetPosition;
+            }
+        #endregion
+        
         #region Rotation
             public IEnumerator RotateTo(float duration, Vector3 targetAngles)
             {
@@ -225,47 +227,49 @@ namespace UO.MovementManagement
             }
         #endregion
 
-        public void Scale(Vector3 targetScale, float sensitivity)
-        {
-            Vector3 smoothedScale = Vector3.Lerp(transformToMove.localScale, targetScale, Time.deltaTime * sensitivity);
-            transformToMove.localScale = smoothedScale;
-        }
-
-        public IEnumerator Scale(float duration, Vector3 targetScale)
-        {
-            Vector3 currentScale = transformToMove.localScale;
-
-            float elapsedTime = 0f;
-
-            while(elapsedTime < duration)
+        #region Scale
+            public void Scale(Vector3 targetScale, float sensitivity)
             {
-                transformToMove.localScale = Vector3.Lerp(currentScale, targetScale, elapsedTime/duration);
-
-                elapsedTime += Time.deltaTime;
-
-                yield return null;
+                Vector3 smoothedScale = Vector3.Lerp(transformToMove.localScale, targetScale, Time.deltaTime * sensitivity);
+                transformToMove.localScale = smoothedScale;
             }
-            transformToMove.localScale = targetScale;
-        }
 
-        public IEnumerator Scale(float duration, Vector3 targetScale, Action endAction)
-        {
-            Vector3 currentScale = transformToMove.localScale;
-
-            float elapsedTime = 0f;
-
-            while(elapsedTime < duration)
+            public IEnumerator Scale(float duration, Vector3 targetScale)
             {
-                transformToMove.localScale = Vector3.Lerp(currentScale, targetScale, elapsedTime/duration);
+                Vector3 currentScale = transformToMove.localScale;
 
-                elapsedTime += Time.deltaTime;
+                float elapsedTime = 0f;
 
-                yield return null;
+                while(elapsedTime < duration)
+                {
+                    transformToMove.localScale = Vector3.Lerp(currentScale, targetScale, elapsedTime/duration);
+
+                    elapsedTime += Time.deltaTime;
+
+                    yield return null;
+                }
+                transformToMove.localScale = targetScale;
             }
-            transformToMove.localScale = targetScale;
 
-            endAction.Invoke();
-        }
+            public IEnumerator Scale(float duration, Vector3 targetScale, Action endAction)
+            {
+                Vector3 currentScale = transformToMove.localScale;
+
+                float elapsedTime = 0f;
+
+                while(elapsedTime < duration)
+                {
+                    transformToMove.localScale = Vector3.Lerp(currentScale, targetScale, elapsedTime/duration);
+
+                    elapsedTime += Time.deltaTime;
+
+                    yield return null;
+                }
+                transformToMove.localScale = targetScale;
+
+                endAction.Invoke();
+            }
+        #endregion
     }
 }
 
